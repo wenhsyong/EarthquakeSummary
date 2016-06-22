@@ -1,0 +1,19 @@
+EarthquakeSummary Application Workflow
+======================================
+
+1. On launching the application the following two items are retrieved from the application configuration:
+
+   a. USGS GeoJSON past hour earthquake summary feeds url
+   b. worldcities.csv (can be downloaded from http://www.opengeocode.org/download/worldcities.zip). This file is assumed located at default folder "C:\USGS Earthquake Summary\",
+      but is configurable. If this file does not exist, the application will terminate after showing a reminder message.
+
+2. A worker thread is then launched to build a 2D kd-tree using (latitude, longitude) of all cities available in worldcities.csv. The tree is buiilt only once during the 
+   application life cycle.
+
+3. A worker thread is launched parallel to the one before to retrieve USGS GeoJSON feed, then wait until kd-tree thread to finish. For each earthquake location, the kd-tree is searched for the three 
+   nearest cities. Each eqrthquake location with its magnitude, coordinates, local time and depth, along with the name and coordinate of the three nearest cities are then displayed in 
+   a listbox. 
+
+4. A timer is set up to repeat the work item 3 above every hour until the application is terminated by the user.
+
+5. The status bar shows simple status for each event. 
